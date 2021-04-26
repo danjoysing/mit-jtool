@@ -38,8 +38,10 @@ public class DomainService {
 		if (firstSpaceIndex == -1) {
 			firstSpaceIndex = row.length();
 		}
-		String col = convertUnderLine(StringUtils.lowerCase(StringUtils.substring(row, 0, firstSpaceIndex)));
-		String comment = StringUtils.substring(row, firstSpaceIndex + 1);
+		String firstCol = convertUnderLine(StringUtils.lowerCase(StringUtils.substring(row, 0, firstSpaceIndex)));
+		String otherCols = StringUtils.substring(row, firstSpaceIndex + 1);
+		
+		String comment = otherCols;
 		if (commentConfig == 1) {
 			int lastSpaceIndex = StringUtils.lastIndexOf(row, " ");
 			if (lastSpaceIndex == -1) {
@@ -49,28 +51,28 @@ public class DomainService {
 		}
 		
 		DomainDTO dto = new DomainDTO();
-		dto.setColName(col);
+		dto.setColName(firstCol);
 		dto.setComment("//" + comment);
 		dto.setType(TypeEnum.STRING.getName());
 		
-		String upperedComment = StringUtils.upperCase(comment);
-		if (StringUtils.containsAny(upperedComment, JdbcTypeEnum.VARCHAR.getName(),
+		String upperedOtherCols = StringUtils.upperCase(otherCols);
+		if (StringUtils.containsAny(upperedOtherCols, JdbcTypeEnum.VARCHAR.getName(),
 				                                    JdbcTypeEnum.CHAR.getName(),
 				                                    JdbcTypeEnum.CLOB.getName())) {
 			dto.setType(TypeEnum.STRING.getName());
-    	} else if (StringUtils.contains(upperedComment, JdbcTypeEnum.BLOB.getName())) {
+    	} else if (StringUtils.contains(upperedOtherCols, JdbcTypeEnum.BLOB.getName())) {
     		dto.setType(TypeEnum.BYTE_ARRAY.getName());
-    	} else if (StringUtils.contains(upperedComment, JdbcTypeEnum.INTEGER.getName())) {
+    	} else if (StringUtils.contains(upperedOtherCols, JdbcTypeEnum.INTEGER.getName())) {
     		dto.setType(TypeEnum.INTEGER.getName());
-	    } else if (StringUtils.containsAny(upperedComment, JdbcTypeEnum.FLOAT.getName(),
+	    } else if (StringUtils.containsAny(upperedOtherCols, JdbcTypeEnum.FLOAT.getName(),
 	    		                                    JdbcTypeEnum.NUMBER.getName())) {
 			dto.setType(TypeEnum.DOUBLE.getName());
-		} else if (StringUtils.contains(upperedComment, JdbcTypeEnum.TIMESTAMP.getName())) {
+		} else if (StringUtils.contains(upperedOtherCols, JdbcTypeEnum.TIMESTAMP.getName())) {
 			dto.setType(TypeEnum.LOCAL_DATE_TIME.getName());
-		} else if (StringUtils.contains(upperedComment, JdbcTypeEnum.DATE.getName())) {
-			if (StringUtils.contains(upperedComment, "時間")) {
+		} else if (StringUtils.contains(upperedOtherCols, JdbcTypeEnum.DATE.getName())) {
+			if (StringUtils.contains(upperedOtherCols, "時間")) {
 				dto.setType(TypeEnum.LOCAL_DATE_TIME.getName());
-			} else if (StringUtils.contains(upperedComment, "日期")) {
+			} else if (StringUtils.contains(upperedOtherCols, "日期")) {
 				dto.setType(TypeEnum.LOCAL_DATE.getName());
 			} else {
 				dto.setType(TypeEnum.LOCAL_DATE_TIME.getName());
