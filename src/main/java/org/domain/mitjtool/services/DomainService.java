@@ -45,23 +45,24 @@ public class DomainService {
 		dto.setComment("//" + comment);
 		dto.setType(TypeEnum.STRING.getName());
 		
-		if (StringUtils.containsAny(comment, JdbcTypeEnum.VARCHAR.getName(),
-				                             JdbcTypeEnum.CHAR.getName(),
-				                             JdbcTypeEnum.CLOB.getName())) {
+		String upperedComment = StringUtils.upperCase(comment);
+		if (StringUtils.containsAny(upperedComment, JdbcTypeEnum.VARCHAR.getName(),
+				                                    JdbcTypeEnum.CHAR.getName(),
+				                                    JdbcTypeEnum.CLOB.getName())) {
 			dto.setType(TypeEnum.STRING.getName());
-    	} else if (StringUtils.contains(comment, JdbcTypeEnum.BLOB.getName())) {
+    	} else if (StringUtils.contains(upperedComment, JdbcTypeEnum.BLOB.getName())) {
     		dto.setType(TypeEnum.BYTE_ARRAY.getName());
-    	} else if (StringUtils.contains(comment, JdbcTypeEnum.INTEGER.getName())) {
+    	} else if (StringUtils.contains(upperedComment, JdbcTypeEnum.INTEGER.getName())) {
     		dto.setType(TypeEnum.INTEGER.getName());
-	    } else if (StringUtils.containsAny(comment, JdbcTypeEnum.FLOAT.getName(),
+	    } else if (StringUtils.containsAny(upperedComment, JdbcTypeEnum.FLOAT.getName(),
 	    		                                    JdbcTypeEnum.NUMBER.getName())) {
 			dto.setType(TypeEnum.DOUBLE.getName());
-		} else if (StringUtils.contains(comment, JdbcTypeEnum.TIMESTAMP.getName())) {
+		} else if (StringUtils.contains(upperedComment, JdbcTypeEnum.TIMESTAMP.getName())) {
 			dto.setType(TypeEnum.LOCAL_DATE_TIME.getName());
-		} else if (StringUtils.contains(comment, JdbcTypeEnum.DATE.getName())) {
-			if (StringUtils.contains(comment, "時間")) {
+		} else if (StringUtils.contains(upperedComment, JdbcTypeEnum.DATE.getName())) {
+			if (StringUtils.contains(upperedComment, "時間")) {
 				dto.setType(TypeEnum.LOCAL_DATE_TIME.getName());
-			} else if (StringUtils.contains(comment, "日期")) {
+			} else if (StringUtils.contains(upperedComment, "日期")) {
 				dto.setType(TypeEnum.LOCAL_DATE.getName());
 			} else {
 				dto.setType(TypeEnum.LOCAL_DATE_TIME.getName());
