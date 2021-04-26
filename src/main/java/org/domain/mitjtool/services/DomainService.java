@@ -41,7 +41,11 @@ public class DomainService {
 		String col = convertUnderLine(StringUtils.lowerCase(StringUtils.substring(row, 0, firstSpaceIndex)));
 		String comment = StringUtils.substring(row, firstSpaceIndex + 1);
 		if (commentConfig == 1) {
-			comment = StringUtils.substring(row, StringUtils.lastIndexOf(row, " ") + 1);
+			int lastSpaceIndex = StringUtils.lastIndexOf(row, " ");
+			if (lastSpaceIndex == -1) {
+				lastSpaceIndex = row.length();
+			}
+			comment = StringUtils.substring(row, lastSpaceIndex + 1);
 		}
 		
 		DomainDTO dto = new DomainDTO();
