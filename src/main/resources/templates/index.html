@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-TW"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no"/>
+	<link rel="stylesheet" th:href="@{/vendor/bootstrap-5.0.0/bootstrap.min.css}" />
+	<title>java-tool</title>
+	<style>
+	    #carouselExample {
+	    	min-height: 500px;
+	    }
+		.btn-carousel-control {
+			background-color: #d7c0c0;
+			width: 60px;
+		}
+		.carousel-indicators > button {
+			background-color: #d7c0c0!important;
+		}
+		img {
+			border: 1px gray groove;
+		}
+	</style>
+</head>
+<body>
+	<div class="container p-4">
+		<h3>
+			自動產生工具
+			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+			  使用說明
+			</button>
+		</h3>
+
+		<form id="form" action="generate" method="post" class="mb-4">
+		    <div>
+		        <label for="tableName">資料表名</label>
+			    <input name="tableName" th:value="${tableName}" class="form-control" required />
+		    </div>
+		    <div>
+		        <label for="cols">欄位資訊</label>
+				<textarea name="cols" rows="10" th:text="${cols}" th:value="${cols}" class="form-control" required></textarea>
+		    </div>
+			<div class="text-center mt-3">
+				<button class="btn btn-primary w-50" type="submit" id="btn_submit">送出</button>
+			</div>
+		</form>
+		
+		<div class="card">
+			<pre th:text="${output}"></pre>
+		</div>
+	</div>
+	
+	
+	
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-xl">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">使用說明</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	        
+	        <!-- 幻燈片 -->
+	        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+	          <div class="carousel-indicators">
+			    <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+			    <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1" aria-label="Slide 2"></button>
+			    <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2" aria-label="Slide 3"></button>
+			  </div>
+			  <div class="carousel-inner w-75 mx-auto">
+			    <div class="carousel-item active">
+			      <h5>透過資料庫工具 反白複製 TableScheme欄位資訊。</h5>
+			      <h5 class="text-danger">(欄位名稱必須位於第一欄，第二欄以後會用來型別判斷及註解生成)</h5>
+			      <h5>※支持JDBC型別：</h5>
+			      <div>
+			          <ul>
+			          	<li>CHAR</li>
+			          	<li>VARCHAR</li>
+			          	<li>CLOB</li>
+			          	<li>BLOB</li>
+			          	<li>NUMBER</li>
+			          	<li>FLOAT</li>
+			          	<li>INTEGER</li>
+			          	<li>DATE</li>
+			          	<li>TIMESTAMP</li>
+			          </ul>
+			      </div>
+			      <img th:src="@{/image/lesson1.png}" class="img-fluid mx-auto" alt="教學1">
+			    </div>
+			    <div class="carousel-item">
+			      <h5>填入表名，貼上TableScheme欄位資訊。</h5>
+			      <img th:src="@{/image/lesson2.png}" class="img-fluid" alt="教學2">
+			    </div>
+			    <div class="carousel-item">
+			      <h5>點選 送出 按鈕。</h5>
+			      <img th:src="@{/image/lesson3.png}" class="img-fluid" alt="教學3">
+			    </div>
+			  </div>
+			  <button class="carousel-control-prev btn-carousel-control"
+			          type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+			    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			    <span class="visually-hidden">Previous</span>
+			  </button>
+			  <button class="carousel-control-next btn-carousel-control"
+			          type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+			    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+			    <span class="visually-hidden">Next</span>
+			  </button>
+			</div>
+	        
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<script th:src="@{/vendor/jquery3.6.0/jquery.min.js}"></script>
+	<script th:src="@{/vendor/bootstrap-5.0.0/bootstrap.min.js}"></script>
+	<script>
+	$(function(){
+	})
+	</script>
+</body>
+</html>
