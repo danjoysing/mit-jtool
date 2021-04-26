@@ -3,6 +3,7 @@ package org.domain.mitjtool.enums;
 public enum TypeEnum {
 	STRING("String"),
 	INTEGER("Integer"),
+	FLOAT("Float"),
 	DOUBLE("Double"),
 	BYTE_ARRAY("byte[]"),
 	LOCAL_DATE("LocalDate"),

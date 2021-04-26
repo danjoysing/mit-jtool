@@ -15,7 +15,9 @@ public class DomainService {
 	public String generate(Req req) {
 		if (StringUtils.isBlank(req.getCols())) return null;
 		StringBuilder sb = prepareStringBuilder(req.getTableName());
-		String[] rows = req.getCols().replace("\t", TypeEnum.SPACE.getName()).split("\n");
+		String[] rows = req.getCols()
+				           .replace("\t", TypeEnum.SPACE.getName())
+				           .split("\n");
 		if (rows != null) {
 			Arrays.stream(rows)
 				  .map(row -> convertRow(row, req.getCommentConfig()))
@@ -64,8 +66,9 @@ public class DomainService {
     		dto.setType(TypeEnum.BYTE_ARRAY.getName());
     	} else if (StringUtils.contains(upperedOtherCols, JdbcTypeEnum.INTEGER.getName())) {
     		dto.setType(TypeEnum.INTEGER.getName());
-	    } else if (StringUtils.containsAny(upperedOtherCols, JdbcTypeEnum.FLOAT.getName(),
-	    		                                    JdbcTypeEnum.NUMBER.getName())) {
+	    } else if (StringUtils.contains(upperedOtherCols, JdbcTypeEnum.FLOAT.getName())) {
+			dto.setType(TypeEnum.FLOAT.getName());
+		} else if (StringUtils.contains(upperedOtherCols, JdbcTypeEnum.NUMBER.getName())){
 			dto.setType(TypeEnum.DOUBLE.getName());
 		} else if (StringUtils.contains(upperedOtherCols, JdbcTypeEnum.TIMESTAMP.getName())) {
 			dto.setType(TypeEnum.LOCAL_DATE_TIME.getName());

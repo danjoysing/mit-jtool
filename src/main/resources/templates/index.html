@@ -92,15 +92,15 @@
 			      <h5>※支持JDBC型別：</h5>
 			      <div>
 			          <ul>
-			          	<li>CHAR</li>
-			          	<li>VARCHAR</li>
-			          	<li>CLOB</li>
-			          	<li>BLOB</li>
-			          	<li>NUMBER</li>
-			          	<li>FLOAT</li>
-			          	<li>INTEGER</li>
-			          	<li>DATE</li>
-			          	<li>TIMESTAMP</li>
+			          	<li>CHAR → String</li>
+			          	<li>VARCHAR → String</li>
+			          	<li>CLOB → String</li>
+			          	<li>BLOB → byte[]</li>
+			          	<li>NUMBER → 預設使用Double，如須改用Integer請再自行replace</li>
+			          	<li>FLOAT → Float</li>
+			          	<li>INTEGER → Integer</li>
+			          	<li>DATE → 根據註解中是否有「時間」文字或「日期」文字，來選用LocalDateTime或LocalDate，若無特定文字則預設為LocalDateTime。</li>
+			          	<li>TIMESTAMP → LocalDateTime</li>
 			          </ul>
 			      </div>
 			      <img th:src="@{/image/lesson1.png}" class="img-fluid mx-auto" alt="教學1">
