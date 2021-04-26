@@ -32,14 +32,29 @@
 			</button>
 		</h3>
 
-		<form id="form" action="generate" method="post" class="mb-4">
+		<form id="form" action="generate" method="post" class="mb-4" th:object="${req}">
 		    <div>
 		        <label for="tableName">資料表名</label>
-			    <input name="tableName" th:value="${tableName}" class="form-control" required />
+			    <input name="tableName" th:field="*{tableName}" class="form-control" required />
 		    </div>
 		    <div>
 		        <label for="cols">欄位資訊</label>
-				<textarea name="cols" rows="10" th:text="${cols}" th:value="${cols}" class="form-control" required></textarea>
+				<textarea name="cols" rows="10"  th:field="*{cols}" class="form-control" required></textarea>
+		    </div>
+		    <div>
+		        <label for="commentConfig">註解產生設定</label>
+		        <div class="form-check">
+				  <input class="form-check-input" type="radio" th:value="0" th:field="*{commentConfig}" checked>
+				  <label class="form-check-label" for="commentConfig1">
+				    All columns after the second column as comment.
+				  </label>
+				</div>
+				<div class="form-check">
+				  <input class="form-check-input" type="radio"  th:value="1" th:field="*{commentConfig}">
+				  <label class="form-check-label" for="commentConfig2">
+				    Only the last column as comment.
+				  </label>
+				</div>
 		    </div>
 			<div class="text-center mt-3">
 				<button class="btn btn-primary w-50" type="submit" id="btn_submit">送出</button>

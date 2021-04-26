@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.apache.commons.lang3.StringUtils;
 import org.domain.mitjtool.dto.DomainDTO;
+import org.domain.mitjtool.dto.Req;
 import org.domain.mitjtool.enums.JdbcTypeEnum;
 import org.domain.mitjtool.enums.TypeEnum;
 import org.springframework.stereotype.Service;
@@ -11,34 +12,37 @@ import org.springframework.stereotype.Service;
 @Service
 public class DomainService {
 
-	public String generate(String tableName, String cols) {
-		if (StringUtils.isBlank(cols)) return null;
-		StringBuilder sb = prepareStringBuilder(tableName);
-		String[] rows = cols.replace("\t", TypeEnum.SPACE.getName()).split("\n");
+	public String generate(Req req) {
+		if (StringUtils.isBlank(req.getCols())) return null;
+		StringBuilder sb = prepareStringBuilder(req.getTableName());
+		String[] rows = req.getCols().replace("\t", TypeEnum.SPACE.getName()).split("\n");
 		if (rows != null) {
 			Arrays.stream(rows)
-				  .map(this::convertRow)
-				  .forEach(dto -> {
+				  .map(row -> convertRow(row, req.getCommentConfig()))
+				  .forEach(dto ->
 					  sb.append("    private ")
 					    .append(dto.getType())
 					    .append(TypeEnum.SPACE.getName())
 					    .append(dto.getColName())
 					    .append("; ")
 					    .append(dto.getComment())
-					    .append("\n");
-				  });
+					    .append("\n")
+				  );
 		}
 		sb.append("}");
 		return sb.toString();
 	}
 	
-	private DomainDTO convertRow(String row) {
+	private DomainDTO convertRow(String row, int commentConfig) {
 		int firstSpaceIndex = StringUtils.indexOf(row, " ");
 		if (firstSpaceIndex == -1) {
 			firstSpaceIndex = row.length();
 		}
 		String col = convertUnderLine(StringUtils.lowerCase(StringUtils.substring(row, 0, firstSpaceIndex)));
 		String comment = StringUtils.substring(row, firstSpaceIndex + 1);
+		if (commentConfig == 1) {
+			comment = StringUtils.substring(row, StringUtils.lastIndexOf(row, " ") + 1);
+		}
 		
 		DomainDTO dto = new DomainDTO();
 		dto.setColName(col);
