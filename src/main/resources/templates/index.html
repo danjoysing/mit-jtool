@@ -6,43 +6,33 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no"/>
 	<link rel="stylesheet" th:href="@{/vendor/bootstrap-5.0.0/bootstrap.min.css}" />
+	<link rel="stylesheet" th:href="@{/vendor/toastr/toastr.min.css}" />
+	<link rel="stylesheet" th:href="@{/css/base.css}" />
 	<title>java-tool</title>
-	<style>
-	    #carouselExample {
-	    	min-height: 500px;
-	    }
-		.btn-carousel-control {
-			background-color: #d7c0c0;
-			width: 60px;
-		}
-		.carousel-indicators > button {
-			background-color: #d7c0c0!important;
-		}
-		img {
-			border: 1px gray groove;
-		}
-	</style>
 </head>
 <body>
-	<div class="container p-4">
-		<h3>
+	<div class="container p-4 my-3">
+		<h3 class="fw-bold">
 			自動產生工具
-			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+			<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
 			  使用說明
 			</button>
 		</h3>
+		<h4 class="text-info fw-bold">
+		  ※此工具僅提供快速產生Java物件，您仍需仔細檢查產生的結果是否正確，並根據實際需求進行型別調整。
+		</h4>
 
 		<form id="form" action="generate" method="post" class="mb-4" th:object="${req}">
 		    <div>
-		        <label for="tableName">資料表名</label>
+		        <label class="fw-bold" for="tableName">資料表名</label>
 			    <input name="tableName" th:field="*{tableName}" class="form-control" required />
 		    </div>
 		    <div>
-		        <label for="cols">欄位資訊</label>
+		        <label class="fw-bold" for="cols">欄位資訊</label>
 				<textarea name="cols" rows="10"  th:field="*{cols}" class="form-control" required></textarea>
 		    </div>
 		    <div>
-		        <label for="commentConfig">註解產生設定</label>
+		        <label class="fw-bold" for="commentConfig">註解產生設定</label>
 		        <div class="form-check">
 				  <input class="form-check-input" type="radio" th:value="0" th:field="*{commentConfig}" checked>
 				  <label class="form-check-label" for="commentConfig1">
@@ -60,9 +50,11 @@
 				<button class="btn btn-primary w-50" type="submit" id="btn_submit">送出</button>
 			</div>
 		</form>
-		
-		<div class="card">
-			<pre th:text="${output}"></pre>
+		<div id="outerOutputDIV">
+			<div id="outputDIV" class="card px-3 py-2" th:if="${output != null}">
+				<pre th:text="${output}"></pre>
+			</div>
+			<button type="button" class="btn btn-outline-secondary" id="btn_copy">COPY</button>
 		</div>
 	</div>
 	
@@ -73,7 +65,7 @@
 	  <div class="modal-dialog modal-xl">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">使用說明</h5>
+	        <h4 class="modal-title fw-bold" id="exampleModalLabel">使用說明</h4>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 	      <div class="modal-body">
@@ -87,6 +79,7 @@
 			  </div>
 			  <div class="carousel-inner w-75 mx-auto">
 			    <div class="carousel-item active">
+			      <h4 class="text-bold fst-italic">Step1.</h4>
 			      <h5>透過資料庫工具 反白複製 TableScheme欄位資訊。</h5>
 			      <h5 class="text-danger">(欄位名稱必須位於第一欄，第二欄以後會用來型別判斷及註解生成)</h5>
 			      <h5>※支持JDBC型別：</h5>
@@ -106,10 +99,12 @@
 			      <img th:src="@{/image/lesson1.png}" class="img-fluid mx-auto" alt="教學1">
 			    </div>
 			    <div class="carousel-item">
+			      <h4 class="text-bold fst-italic">Step2.</h4>
 			      <h5>填入表名，貼上TableScheme欄位資訊。</h5>
 			      <img th:src="@{/image/lesson2.png}" class="img-fluid" alt="教學2">
 			    </div>
 			    <div class="carousel-item">
+			      <h4 class="text-bold fst-italic">Step3.</h4>
 			      <h5>點選 送出 按鈕。</h5>
 			      <img th:src="@{/image/lesson3.png}" class="img-fluid" alt="教學3">
 			    </div>
@@ -136,8 +131,31 @@
 	
 	<script th:src="@{/vendor/jquery3.6.0/jquery.min.js}"></script>
 	<script th:src="@{/vendor/bootstrap-5.0.0/bootstrap.min.js}"></script>
+	<script th:src="@{/vendor/toastr/toastr.min.js}"></script>
 	<script>
 	$(function(){
+		toastr.options = {
+			"closeButton": "true",
+		    "positionClass": "toast-top-center",
+		};
+		$('#btn_copy').click(function(e){
+			e.preventDefault();
+			copyTextToClipboard(document.querySelector('#outputDIV pre'));
+		});
+		
+		function copyTextToClipboard(domElement) {
+            if (document.queryCommandSupported('copy')) {
+			    let TextRange = document.createRange();
+			    TextRange.selectNode(domElement);
+			    sel = window.getSelection();
+		        sel.removeAllRanges();
+		        sel.addRange(TextRange);
+			    document.execCommand("copy");
+			    toastr.success("複製完成！");
+			} else {
+				toastr.warning('您的瀏覽器不支援copy功能，請手動反白複製.');
+			}
+		}
 	})
 	</script>
 </body>

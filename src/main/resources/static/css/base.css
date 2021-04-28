@@ -1,0 +1,39 @@
+#carouselExample {
+	min-height: 500px;
+}
+.btn-carousel-control {
+	background-color: #d7c0c0;
+	width: 60px;
+}
+.carousel-indicators > button {
+	background-color: #d7c0c0!important;
+}
+.form-control, #outputDIV {
+	background-color: #f9fbfb!important;
+	border: 1px gray inset!important;
+}
+body {
+	background-color: #d0decb;
+}
+.container {
+	background-color: rgb(216, 253, 202);
+}
+img {
+	border: 1px gray groove;
+}
+#outerOutputDIV {
+	position: relative;
+}
+#outputDIV {
+	max-height: 1000px;
+	overflow-y: auto;
+}
+#btn_copy {
+	width: 85px;
+	height: 40px;
+	border-radius: 18px;
+	position: absolute;
+	z-index: 3;
+	bottom: 5px;
+	right: 30px;
+}
