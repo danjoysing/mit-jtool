@@ -66,8 +66,8 @@ public class DomainService {
 		
 		String upperedOtherCols = StringUtils.upperCase(otherCols);
 		if (StringUtils.containsAny(upperedOtherCols, JdbcTypeEnum.VARCHAR.getName(),
-				                                    JdbcTypeEnum.CHAR.getName(),
-				                                    JdbcTypeEnum.CLOB.getName())) {
+				                                      JdbcTypeEnum.CHAR.getName(),
+				                                      JdbcTypeEnum.CLOB.getName())) {
 			dto.setType(TypeEnum.STRING.getName());
     	} else if (StringUtils.contains(upperedOtherCols, JdbcTypeEnum.BLOB.getName())) {
     		dto.setType(TypeEnum.BYTE_ARRAY.getName());
@@ -87,6 +87,8 @@ public class DomainService {
 			} else {
 				dto.setType(TypeEnum.LOCAL_DATE_TIME.getName());
 			}
+		} else if (StringUtils.containsAny(upperedOtherCols, "數字", "價", "金", "額", "合計", "小計", "總計")) {
+			dto.setType(TypeEnum.DOUBLE.getName());
 		} else {
 			dto.setType(TypeEnum.STRING.getName());
 		}
