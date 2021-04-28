@@ -38,6 +38,7 @@ public class DomainService {
 	}
 	
 	private DomainDTO convertRow(String row, int commentConfig) {
+		row = row.trim();
 		int firstSpaceIndex = StringUtils.indexOf(row, " ");
 		if (firstSpaceIndex == -1) {
 			firstSpaceIndex = row.length();
