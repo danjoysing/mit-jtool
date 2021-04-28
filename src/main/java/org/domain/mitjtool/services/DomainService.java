@@ -16,10 +16,12 @@ public class DomainService {
 		if (StringUtils.isBlank(req.getCols())) return null;
 		StringBuilder sb = prepareStringBuilder(req.getTableName());
 		String[] rows = req.getCols()
-				           .replace("\t", TypeEnum.SPACE.getName())
+				           .replace("\t", TypeEnum.SPACE.getName()) //取代tab
+				           .replace(String.valueOf((char)13), TypeEnum.SPACE.getName()) //取代enter符
 				           .split("\n");
 		if (rows != null) {
 			Arrays.stream(rows)
+			      .filter(StringUtils::isNotBlank)
 				  .map(row -> convertRow(row, req.getCommentConfig()))
 				  .forEach(dto ->
 					  sb.append("    private ")
@@ -50,6 +52,11 @@ public class DomainService {
 				lastSpaceIndex = row.length();
 			}
 			comment = StringUtils.substring(row, lastSpaceIndex + 1);
+		}
+		//從firstCol取出'.'以後的欄位名稱
+		int lastIndexOfDotInFirstCol = StringUtils.lastIndexOf(firstCol, ".");
+		if (lastIndexOfDotInFirstCol != -1) {
+			firstCol = StringUtils.substring(firstCol, lastIndexOfDotInFirstCol + 1);
 		}
 		
 		DomainDTO dto = new DomainDTO();
