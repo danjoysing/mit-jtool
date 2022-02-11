@@ -10,6 +10,7 @@
 	</parent>
 	<groupId>org.domain</groupId>
 	<artifactId>mit-jtool</artifactId>
+	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>mit-jtool</name>
 	<description>A convienent tool to create domain object from Tables.</description>
@@ -46,6 +47,10 @@
 		    <groupId>org.apache.commons</groupId>
 		    <artifactId>commons-lang3</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -62,6 +67,23 @@
 					</excludes>
 				</configuration>
 			</plugin>
+	        <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <warName>mit-jtool##${project.version}</warName>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Built-By>daniel</Built-By>
+                            <Build-Time>${maven.build.timestamp}</Build-Time>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 

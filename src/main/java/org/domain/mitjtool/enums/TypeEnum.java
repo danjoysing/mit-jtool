@@ -5,9 +5,11 @@ public enum TypeEnum {
 	INTEGER("Integer"),
 	FLOAT("Float"),
 	DOUBLE("Double"),
+	BIGDECIMAL("BigDecimal"),
 	BYTE_ARRAY("byte[]"),
 	LOCAL_DATE("LocalDate"),
 	LOCAL_DATE_TIME("LocalDateTime"),
+	TIMESTAMP("Timestamp"),
 	SPACE(" ");
 
 	private String name;

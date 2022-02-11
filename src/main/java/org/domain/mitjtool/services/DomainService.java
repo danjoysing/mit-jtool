@@ -1,6 +1,7 @@
 package org.domain.mitjtool.services;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.domain.mitjtool.dto.DomainDTO;
@@ -77,9 +78,9 @@ public class DomainService {
 	    } else if (StringUtils.contains(upperedOtherCols, JdbcTypeEnum.FLOAT.getName())) {
 			dto.setType(TypeEnum.FLOAT.getName());
 		} else if (StringUtils.contains(upperedOtherCols, JdbcTypeEnum.NUMBER.getName())){
-			dto.setType(TypeEnum.DOUBLE.getName());
+			dto.setType(TypeEnum.BIGDECIMAL.getName());
 		} else if (StringUtils.contains(upperedOtherCols, JdbcTypeEnum.TIMESTAMP.getName())) {
-			dto.setType(TypeEnum.LOCAL_DATE_TIME.getName());
+			dto.setType(TypeEnum.TIMESTAMP.getName());
 		} else if (StringUtils.contains(upperedOtherCols, JdbcTypeEnum.DATE.getName())) {
 			if (StringUtils.contains(upperedOtherCols, "時間")) {
 				dto.setType(TypeEnum.LOCAL_DATE_TIME.getName());
@@ -89,7 +90,7 @@ public class DomainService {
 				dto.setType(TypeEnum.LOCAL_DATE_TIME.getName());
 			}
 		} else if (StringUtils.containsAny(upperedOtherCols, "數字", "價", "金", "額", "合計", "小計", "總計")) {
-			dto.setType(TypeEnum.DOUBLE.getName());
+			dto.setType(TypeEnum.BIGDECIMAL.getName());
 		} else {
 			dto.setType(TypeEnum.STRING.getName());
 		}
@@ -123,5 +124,47 @@ public class DomainService {
 			}
 		}
 		return String.valueOf(carr).replace("_", "");
+	}
+
+	public Object generateLogField(Req req) {
+		if (StringUtils.isBlank(req.getCols())) return null;
+		String[] rows = req.getCols()
+		           .replace("\t", TypeEnum.SPACE.getName()) //取代tab
+		           .replace(String.valueOf((char)13), TypeEnum.SPACE.getName()) //取代enter符
+		           .split("\n");
+		if (rows != null) {
+			return Arrays.stream(rows)
+			      .filter(StringUtils::isNotBlank)
+				  .map(row -> {
+					  int i = 0;
+					  int startIndex = 0;
+					  boolean isStop = false;
+					  String colName = null;
+					  char[] carr = row.toCharArray();
+					  for (int j = 0, max = carr.length; j < max; j++) {
+						  if (carr[j] == ' ') {
+							  if (!isStop) {
+								  i++;
+								  isStop = true;
+							  }
+							  if (i == 4) {
+								  colName = StringUtils.substring(row, startIndex, j);
+								  break;
+							  }
+						  } else {
+							  if (i == 3 && startIndex == 0) {
+								  startIndex = j;
+							  }
+							  isStop = false;
+						  }
+					  }
+					  colName = StringUtils.upperCase(StringUtils.replace(colName, ";", ""));
+					  return "    @Upcol(\"" + colName + "\")"
+							  + String.valueOf((char)13)
+							  + row;
+				  })
+				  .collect(Collectors.joining(String.valueOf((char)13)));
+		}
+		return null;
 	}
 }
