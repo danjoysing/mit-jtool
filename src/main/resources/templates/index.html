@@ -34,14 +34,20 @@
 		    <div>
 		        <label class="fw-bold" for="commentConfig">註解產生設定</label>
 		        <div class="form-check">
-				  <input class="form-check-input" type="radio" th:value="0" th:field="*{commentConfig}" checked>
+				  <input class="form-check-input" type="radio" th:value="-1" th:field="*{commentConfig}" checked>
 				  <label class="form-check-label" for="commentConfig1">
+				    No comment.
+				  </label>
+				</div>
+		        <div class="form-check">
+				  <input class="form-check-input" type="radio" th:value="0" th:field="*{commentConfig}">
+				  <label class="form-check-label" for="commentConfig2">
 				    All columns after the second column as comment.
 				  </label>
 				</div>
 				<div class="form-check">
 				  <input class="form-check-input" type="radio"  th:value="1" th:field="*{commentConfig}">
-				  <label class="form-check-label" for="commentConfig2">
+				  <label class="form-check-label" for="commentConfig3">
 				    Only the last column as comment.
 				  </label>
 				</div>
@@ -89,11 +95,11 @@
 			          	<li>VARCHAR → String</li>
 			          	<li>CLOB → String</li>
 			          	<li>BLOB → byte[]</li>
-			          	<li>NUMBER → 預設使用Double，如須改用Integer請再自行replace</li>
+			          	<li>NUMBER → 預設使用BigDecimal，如須改用Integer請再自行replace</li>
 			          	<li>FLOAT → Float</li>
 			          	<li>INTEGER → Integer</li>
 			          	<li>DATE → 根據註解中是否有「時間」文字或「日期」文字，來選用LocalDateTime或LocalDate，若無特定文字則預設為LocalDateTime。</li>
-			          	<li>TIMESTAMP → LocalDateTime</li>
+			          	<li>TIMESTAMP → TimeStamp</li>
 			          </ul>
 			      </div>
 			      <img th:src="@{/image/lesson1.png}" class="img-fluid mx-auto" alt="教學1">

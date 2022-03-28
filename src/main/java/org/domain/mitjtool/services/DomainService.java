@@ -24,15 +24,19 @@ public class DomainService {
 			Arrays.stream(rows)
 			      .filter(StringUtils::isNotBlank)
 				  .map(row -> convertRow(row, req.getCommentConfig()))
-				  .forEach(dto ->
+				  .forEach(dto -> {
+				      //添加 @LogField註解
+				      sb.append("    @LogField")
+				        .append("\n");
+				      
 					  sb.append("    private ")
 					    .append(dto.getType())
 					    .append(TypeEnum.SPACE.getName())
 					    .append(dto.getColName())
 					    .append("; ")
 					    .append(dto.getComment())
-					    .append("\n")
-				  );
+					    .append("\n");
+				  });
 		}
 		sb.append("}");
 		return sb.toString();
@@ -54,6 +58,8 @@ public class DomainService {
 				lastSpaceIndex = row.length();
 			}
 			comment = StringUtils.substring(row, lastSpaceIndex + 1);
+		} else if (commentConfig == -1) {
+		    comment = "";
 		}
 		//從firstCol取出'.'以後的欄位名稱
 		int lastIndexOfDotInFirstCol = StringUtils.lastIndexOf(firstCol, ".");
@@ -63,7 +69,7 @@ public class DomainService {
 		
 		DomainDTO dto = new DomainDTO();
 		dto.setColName(firstCol);
-		dto.setComment("//" + comment);
+		dto.setComment(StringUtils.isNotBlank(comment) ? "//" + comment : "");
 		dto.setType(TypeEnum.STRING.getName());
 		
 		String upperedOtherCols = StringUtils.upperCase(otherCols);
@@ -107,10 +113,11 @@ public class DomainService {
 		  .append("@Data\n")
 		  .append("@NoArgsConstructor\n")
 		  .append("@AllArgsConstructor\n")
-		  .append("@Alias(\"" + camelTableName + "\")\n")
+//		  .append("@Alias(\"" + camelTableName + "\")\n")
 		  .append("@Table(\"" + StringUtils.upperCase(tableName) + "\")\n")
 		  .append("public class ")
 		  .append(camelTableName)
+		  .append(" implements Serializable ")
 		  .append(" {\n");
 		return sb;
 	}
